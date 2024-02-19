@@ -44,4 +44,19 @@ const StartServer = () => {
 
         next();
     });
+
+    //** Routes */
+
+    /** Healthcheck */
+    router.get('/ping', (req, res, next) => res.status(200).json({ message: 'Pong' }));
+
+    /**Error Handling */
+    router.use((req, res, next) => {
+        const error = new Error('Not Found');
+        Logging.error(error);
+
+        return res.status(404).json({ message: error.message });
+    });
+
+    http.createServer(router).listen(config.server.port, () => Logging.info(`Server is running on port ${config.server.port}`));
 };
